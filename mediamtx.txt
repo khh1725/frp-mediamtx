@@ -1,0 +1,355 @@
+###############################################
+# Global settings
+logLevel: debug
+logDestinations: [stdout]
+logFile: mediamtx.log
+sysLogPrefix: mediamtx
+
+readTimeout: 10s
+writeTimeout: 10s
+writeQueueSize: 512
+udpMaxPayloadSize: 1472
+udpReadBufferSize: 0
+
+runOnConnect:
+runOnConnectRestart: false  # 统一为false，替代no
+runOnDisconnect:
+
+###############################################
+# Global settings -> Authentication
+authMethod: internal
+authInternalUsers:
+- user: any
+  pass:
+  ips: []
+  permissions:
+  - action: publish
+    path:
+  - action: read
+    path:
+  - action: playback
+    path:
+- user: any
+  pass:
+  ips: ['127.0.0.1', '::1']
+  permissions:
+  - action: api
+  - action: metrics
+  - action: pprof
+
+authHTTPAddress:
+authHTTPExclude:
+- action: api
+- action: metrics
+- action: pprof
+
+authJWTJWKS:
+authJWTJWKSFingerprint:
+authJWTClaimKey: mediamtx_permissions
+authJWTExclude: []
+authJWTInHTTPQuery: true
+
+###############################################
+# Global settings -> Control API
+api: false  # 统一为false，替代no
+apiAddress: :9997
+apiEncryption: false
+apiServerKey: server.key
+apiServerCert: server.crt
+apiAllowOrigins: ['*']
+apiTrustedProxies: []
+
+###############################################
+# Global settings -> Metrics
+metrics: false
+metricsAddress: :9998
+metricsEncryption: false
+metricsServerKey: server.key
+metricsServerCert: server.crt
+metricsAllowOrigins: ['*']
+metricsTrustedProxies: []
+
+###############################################
+# Global settings -> PPROF
+pprof: false
+pprofAddress: :9999
+pprofEncryption: false
+pprofServerKey: server.key
+pprofServerCert: server.crt
+pprofAllowOrigins: ['*']
+pprofTrustedProxies: []
+
+###############################################
+# Global settings -> Playback server
+playback: false
+playbackAddress: :9996
+playbackEncryption: false
+playbackServerKey: server.key
+playbackServerCert: server.crt
+playbackAllowOrigins: ['*']
+playbackTrustedProxies: []
+
+###############################################
+# Global settings -> RTSP server
+rtsp: true  # 统一为true，替代yes
+rtspTransports: [udp, multicast, tcp]
+rtspEncryption: "no"
+rtspAddress: :6200
+rtspsAddress: :6322
+rtpAddress: :6000
+rtcpAddress: :6001
+multicastIPRange: 224.1.0.0/16
+multicastRTPPort: 6002
+multicastRTCPPort: 6003
+srtpAddress: :6004
+srtcpAddress: :6005
+multicastSRTPPort: 6006
+multicastSRTCPPort: 6007
+rtspServerKey: server.key
+rtspServerCert: server.crt
+rtspAuthMethods: [basic]
+
+###############################################
+# Global settings -> RTMP server
+rtmp: false
+rtmpAddress: :1935
+rtmpEncryption: "no"
+rtmpsAddress: :1936
+rtmpServerKey: server.key
+rtmpServerCert: server.crt
+
+###############################################
+# Global settings -> HLS server
+hls: false
+hlsAddress: :8888
+hlsEncryption: false
+hlsServerKey: server.key
+hlsServerCert: server.crt
+hlsAllowOrigins: ['*']
+hlsTrustedProxies: []
+hlsAlwaysRemux: false
+hlsVariant: lowLatency
+hlsSegmentCount: 7
+hlsSegmentDuration: 1s
+hlsPartDuration: 200ms
+hlsSegmentMaxSize: 50M
+hlsDirectory: ''
+hlsMuxerCloseAfter: 60s
+
+###############################################
+# Global settings -> WebRTC server
+webrtc: true
+webrtcAddress: :8889  # WebRTC信令端口，需在阿里云开放
+webrtcEncryption: true
+webrtcServerKey: server.key
+webrtcServerCert: server.crt
+webrtcAllowOrigins: ['*']
+webrtcTrustedProxies: []
+webrtcLocalUDPAddress: :8189  # WebRTC媒体端口，需在阿里云开放
+webrtcLocalTCPAddress: ''
+webrtcIPsFromInterfaces: false
+webrtcIPsFromInterfacesList: []
+webrtcAdditionalHosts: ['8.137.101.41']  # 你的阿里云公网IP
+webrtcICEServers2:
+  - url:  stun:stun.aliyun.com:3478  # 启用阿里云公共STUN，提升连接成功率
+    username: ''
+    password: ''
+webrtcHandshakeTimeout: 10s
+webrtcTrackGatherTimeout: 2s
+webrtcSTUNGatherTimeout: 5s
+
+###############################################
+# Global settings -> SRT server
+srt: false
+srtAddress: :8890
+
+###############################################
+# Default path settings
+pathDefaults:
+  source: publisher
+  sourceFingerprint:
+  sourceOnDemand: true
+  sourceOnDemandStartTimeout: 10s
+  sourceOnDemandCloseAfter: 10s
+  maxReaders: 0
+  srtReadPassphrase:
+  fallback:
+  useAbsoluteTimestamp: false
+  record: false
+  recordPath: ./recordings/%path/%Y-%m-%d_%H-%M-%S-%f
+  recordFormat: fmp4
+  recordPartDuration: 1s
+  recordMaxPartSize: 50M
+  recordSegmentDuration: 1h
+  recordDeleteAfter: 1d
+  overridePublisher: true
+  srtPublishPassphrase:
+  rtspTransport: automatic
+  rtspAnyPort: false
+  rtspRangeType:
+  rtspRangeStart:
+  rtpSDP:
+  sourceRedirect:
+  rpiCameraCamID: 0
+  rpiCameraSecondary: false
+  rpiCameraWidth: 1920
+  rpiCameraHeight: 1080
+  rpiCameraHFlip: false
+  rpiCameraVFlip: false
+  rpiCameraBrightness: 0
+  rpiCameraContrast: 1
+  rpiCameraSaturation: 1
+  rpiCameraSharpness: 1
+  rpiCameraExposure: normal
+  rpiCameraAWB: auto
+  rpiCameraAWBGains: [0, 0]
+  rpiCameraDenoise: "off"
+  rpiCameraShutter: 0
+  rpiCameraMetering: centre
+  rpiCameraGain: 0
+  rpiCameraEV: 0
+  rpiCameraROI:
+  rpiCameraHDR: false
+  rpiCameraTuningFile:
+  rpiCameraMode:
+  rpiCameraFPS: 30
+  rpiCameraAfMode: continuous
+  rpiCameraAfRange: normal
+  rpiCameraAfSpeed: normal
+  rpiCameraLensPosition: 0.0
+  rpiCameraAfWindow:
+  rpiCameraFlickerPeriod: 0
+  rpiCameraTextOverlayEnable: false
+  rpiCameraTextOverlay: '%Y-%m-%d %H:%M:%S - MediaMTX'
+  rpiCameraCodec: auto
+  rpiCameraIDRPeriod: 60
+  rpiCameraBitrate: 5000000
+  rpiCameraHardwareH264Profile: main
+  rpiCameraHardwareH264Level: '4.1'
+  rpiCameraSoftwareH264Profile: baseline
+  rpiCameraSoftwareH264Level: '4.1'
+  rpiCameraMJPEGQuality: 60
+  runOnInit:
+  runOnInitRestart: false
+  runOnDemand:
+  runOnDemandRestart: false
+  runOnDemandStartTimeout: 10s
+  runOnDemandCloseAfter: 10s
+  runOnUnDemand:
+  runOnReady:
+  runOnReadyRestart: false
+  runOnNotReady:
+  runOnRead:
+  runOnReadRestart: false
+  runOnUnread:
+  runOnRecordSegmentCreate:
+  runOnRecordSegmentComplete:
+
+#   runOnReady: |
+#     ffmpeg -i rtsp://127.0.0.1:6200/{{path}} \
+#     -c:v copy \
+#     -c:a libopus -b:a 64k \
+#     -f rtsp rtsp://127.0.0.1:6200/{{path}}_opus
+#   runOnReadyRestart: false
+#   runOnNotReady:
+#   runOnRead:
+#   runOnReadRestart: false
+#   runOnUnread:
+#   runOnRecordSegmentCreate:
+#   runOnRecordSegmentComplete:
+
+###############################################
+# Path settings
+paths:
+  device_6101:
+   source: rtsp://admin:BXADXN@8.137.101.41:6101/h264/ch1/main/av_stream
+   rtspTransport: tcp
+   sourceOnDemand: true
+  device_6102:
+   source: rtsp://admin:GFWRLV@8.137.101.41:6102/h264/ch1/main/av_stream
+   rtspTransport: tcp
+   sourceOnDemand: true
+  device_6103:
+   source: rtsp://admin:PPNBXH@8.137.101.41:6103/h264/ch1/main/av_stream
+   rtspTransport: tcp
+   sourceOnDemand: true
+  device_6104:
+   source: rtsp://admin:BIGGUM@8.137.101.41:6104/h264/ch1/main/av_stream
+   rtspTransport: tcp
+   sourceOnDemand: true
+  device_6105:
+   source: rtsp://admin:IHLZHC@8.137.101.41:6105/h264/ch1/main/av_stream
+   rtspTransport: tcp
+   sourceOnDemand: true
+  device_6106:
+   source: rtsp://admin:ZLHNPB@8.137.101.41:6106/h264/ch1/main/av_stream
+   rtspTransport: tcp
+   sourceOnDemand: true
+  device_6107:
+   source: rtsp://admin:BZVTOO@8.137.101.41:6107/h264/ch1/main/av_stream
+   rtspTransport: tcp
+   sourceOnDemand: true
+  device_6109:
+   source: rtsp://admin:TRNJYF@8.137.101.41:6109/h264/ch1/main/av_stream
+   rtspTransport: tcp
+   sourceOnDemand: true
+  device_6110:
+   source: rtsp://admin:FJHDCJ@8.137.101.41:6110/h264/ch1/main/av_stream
+   rtspTransport: tcp
+   sourceOnDemand: true
+  device_6111:
+   source: rtsp://admin:CGUJPB@8.137.101.41:6111/h264/ch1/main/av_stream
+   rtspTransport: tcp
+   sourceOnDemand: true
+  device_6501:
+   source: rtsp://admin:URVENZ@8.137.101.41:6501/h264/ch1/main/av_stream
+   rtspTransport: tcp
+   sourceOnDemand: true
+  device_6112:
+   source: rtsp://admin:YVIYBG@8.137.101.41:6112/h264/ch1/main/av_stream
+   rtspTransport: tcp
+   sourceOnDemand: true 
+  device_6113:
+   source: rtsp://admin:QIRQND@8.137.101.41:6113/h264/ch1/main/av_stream
+   rtspTransport: tcp
+   sourceOnDemand: true 
+  device_6114:
+   source: rtsp://admin:CFXFWY@8.137.101.41:6114/h264/ch1/main/av_stream
+   rtspTransport: tcp
+   sourceOnDemand: true 
+  device_6115:
+   source: rtsp://admin:YUPZWT@8.137.101.41:6115/h264/ch1/main/av_stream
+   rtspTransport: tcp
+   sourceOnDemand: true 
+  device_6116:
+   source: rtsp://admin:EZNBJZ@8.137.101.41:6116/h264/ch1/main/av_stream
+   rtspTransport: tcp
+   sourceOnDemand: true 
+  device_6117:
+   source: rtsp://admin:WVDMOS@8.137.101.41:6117/h264/ch1/main/av_stream
+   rtspTransport: tcp
+   sourceOnDemand: true 
+  device_6118:
+   source: rtsp://admin:UHMYNB@8.137.101.41:6118/h264/ch1/main/av_stream
+   rtspTransport: tcp
+   sourceOnDemand: true 
+  device_6119:
+   source: rtsp://admin:JRULMI@8.137.101.41:6119/h264/ch1/main/av_stream
+   rtspTransport: tcp
+   sourceOnDemand: true 
+  device_6120:
+   source: rtsp://admin:DUCADK@8.137.101.41:6120/h264/ch1/main/av_stream
+   rtspTransport: tcp
+   sourceOnDemand: true
+  device_6501_h264:
+    sourceOnDemand: false
+    runOnDemand: /usr/bin/ffmpeg -rtsp_transport tcp -i rtsp://127.0.0.1:6200/device_6501 -vf scale=1280:720 -c:v libx264 -preset ultrafast -tune zerolatency -profile:v baseline -level 3.1 -bf 0 -pix_fmt yuv420p -b:v 1500k -c:a libopus -b:a 48k -f rtsp rtsp://127.0.0.1:6200/device_6501_h264
+    runOnDemandRestart: true
+  device_6116_h264:
+   sourceOnDemand: false
+   runOnDemand: /usr/bin/ffmpeg -rtsp_transport tcp -i rtsp://127.0.0.1:6200/device_6116 -vf scale=1280:720 -c:v libx264 -preset ultrafast -tune zerolatency -profile:v baseline -level 3.1 -bf 0 -pix_fmt yuv420p -b:v 1500k -c:a libopus -b:a 48k -f rtsp rtsp://127.0.0.1:6200/device_6116_h264
+   runOnDemandRestart: true
+  # 其他未匹配的路径
+  all_others:
+    source: publisher
+    sourceOnDemand: false

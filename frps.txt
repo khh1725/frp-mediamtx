@@ -1,0 +1,12 @@
+bindAddr = "0.0.0.0"
+bindPort = 7000   # 内网穿透端口
+# 用户认证
+auth.method = "token"  #{可选}身份验证方式 
+auth.token = "123456"   #token设置密码，用于通过身份验证创建连接
+log.level = "debug"
+ 
+# 后台管理
+webServer.addr = "0.0.0.0" 
+webServer.port = 7500  # frps管理后台端口
+webServer.user = "admin"   # 登录名
+webServer.password = "admin123" # 登录密码
